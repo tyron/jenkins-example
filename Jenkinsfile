@@ -1,4 +1,5 @@
 def userInput() {
+    def userInput = false
     def didTimeout = false
     try {
         timeout(time: 2, unit: 'MINUTES') {
@@ -12,10 +13,10 @@ def userInput() {
         if('SYSTEM' == user.toString()) { // SYSTEM means timeout.
             didTimeout = true
         } else {
-            userInput = false
             echo "Aborted by: [${user}]"
         }
     }
+    return userInput
 }
 
 pipeline {  
