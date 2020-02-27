@@ -41,7 +41,7 @@ pipeline {
         }
 
         stage('Deployment Approval') {
-            approved = userInput
+            approved = userInput()
         }
 
         if (approved == true) {
