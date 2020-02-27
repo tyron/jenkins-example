@@ -1,4 +1,4 @@
-def userInput {
+def userInput() {
     def didTimeout = false
     try {
         timeout(time: 2, unit: 'MINUTES') {
