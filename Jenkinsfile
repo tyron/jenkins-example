@@ -42,7 +42,7 @@ pipeline {
 
         stage('Deployment Approval') {
             steps {
-                approved = userInput()
+                def approved = userInput()
             }
         }
 
