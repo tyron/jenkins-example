@@ -1,4 +1,4 @@
-pipeline {
+pipeline {  
     agent any
 
     stages {
@@ -24,8 +24,8 @@ pipeline {
         stage ('Deployment Stage') {
             steps {
                 script {
-                  timeout(time: 10, unit: 'MINUTES') {
-                    input(id: "Deploy Gate", message: "Deploy ${params.project_name}?", ok: 'Deploy')
+                  timeout(time: 2, unit: 'MINUTES') {
+                    input(id: "Deploy Gate", message: "Deploy ${env.JOB_NAME}?", ok: 'Deploy')
                   }
                 }
                 withMaven(maven : 'maven_3_5_0') {
