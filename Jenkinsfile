@@ -1,3 +1,15 @@
+def userInput
+try {
+    userInput = input(
+        id: 'Proceed1', message: 'Was this successful?', parameters: [
+        [$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']
+        ])
+} catch(err) { // input false
+    def user = err.getCauses()[0].getUser()
+    userInput = false
+    echo "Aborted by: [${user}]"
+}
+
 pipeline {  
     agent any
 
@@ -20,16 +32,23 @@ pipeline {
             }
         }
 
+        stage('Deployment Approval') {
+            approved = userInput
+        }
 
-        stage ('Deployment Stage') {
-            steps {
-                script {
-                  timeout(time: 2, unit: 'MINUTES') {
-                    input(id: "Deploy Gate", message: "Deploy ${env.JOB_NAME}?", ok: 'Deploy')
-                  }
-                }
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn deploy'
+        if (approved == true) {
+            stage ('Deployment Stage') {
+                steps {
+                    /*
+                    script {
+                      timeout(time: 2, unit: 'MINUTES') {
+                        input(id: "Deploy Gate", message: "Deploy ${env.JOB_NAME}?", ok: 'Deploy')
+                      }
+                    }
+                    */
+                    withMaven(maven : 'maven_3_5_0') {
+                        sh 'mvn deploy'
+                    }
                 }
             }
         }
