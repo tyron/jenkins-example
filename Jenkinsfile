@@ -41,22 +41,23 @@ pipeline {
         }
 
         stage('Deployment Approval') {
-            approved = userInput()
+            steps {
+                approved = userInput()
+            }
         }
 
-        if (approved == true) {
-            stage ('Deployment Stage') {
-                steps {
-                    /*
-                    script {
-                      timeout(time: 2, unit: 'MINUTES') {
-                        input(id: "Deploy Gate", message: "Deploy ${env.JOB_NAME}?", ok: 'Deploy')
-                      }
-                    }
-                    */
-                    withMaven(maven : 'maven_3_5_0') {
-                        sh 'mvn deploy'
-                    }
+        stage ('Deployment Stage') {
+            when { expression { return approved } }
+            steps {
+                /*
+                script {
+                  timeout(time: 2, unit: 'MINUTES') {
+                    input(id: "Deploy Gate", message: "Deploy ${env.JOB_NAME}?", ok: 'Deploy')
+                  }
+                }
+                */
+                withMaven(maven : 'maven_3_5_0') {
+                    sh 'mvn deploy'
                 }
             }
         }
