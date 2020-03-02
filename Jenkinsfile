@@ -41,14 +41,6 @@ pipeline {
             }
         }
 
-        stage('Deployment Approval') {
-            steps {
-                script {
-                    approved = userInput()
-                }
-            }
-        }
-        
         stage ('Artifact publish') {
             steps {
              rtUpload (
@@ -56,14 +48,21 @@ pipeline {
                 spec: '''{
                       "files": [
                         {
-                          "pattern": "jenkins-example-*.jar",
+                          "pattern": "jenkins-example-*.*",
                           "target": "libs-snapshot-local/jenkins-example/"
                         }
                      ]
                 }'''
               )
             }
-            
+        }
+        
+        stage('Deployment Approval') {
+            steps {
+                script {
+                    approved = userInput()
+                }
+            }
         }
 
         stage ('Deployment Stage') {
