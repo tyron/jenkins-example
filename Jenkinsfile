@@ -48,6 +48,23 @@ pipeline {
                 }
             }
         }
+        
+        stage ('Artifact publish') {
+            steps {
+             rtUpload (
+                serverId: 'artifactory',
+                spec: '''{
+                      "files": [
+                        {
+                          "pattern": "jenkins-example-*.jar",
+                          "target": "libs-snapshot-local/jenkins-example/"
+                        }
+                     ]
+                }'''
+              }
+            }
+            
+        }
 
         stage ('Deployment Stage') {
             when { expression { return approved } }
